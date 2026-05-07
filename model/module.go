@@ -1,18 +1,10 @@
 package model
 
-type Dependency struct {
-	Name string `yaml:"name"`
-
-	// a map of source -> package name.
-	// sources are provided by the user
-	Packages map[string]string `yaml:"packages"`
-}
-
 type Module struct {
+	Skip     bool         `yaml:"skip"` // if true, the module will be fully ignored when deploying
 	BasePath string       // module path on disk, dynamically set when loading
 	Files    []ModuleFile `yaml:"files"`
 	Target   string       `yaml:"target"`
-	Deps     []Dependency `yaml:"deps"`
 }
 
 type FileStrategy string

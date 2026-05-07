@@ -20,3 +20,22 @@ The module.yml itself is a template can use all variables from your configs to o
 doth uses gos [text/template](https://pkg.go.dev/text/template) system. Look it up, it's powerful yet straight forward.
 
 Basic examples will be added here later.
+
+## Dependencies
+
+You can define dependencies to install in your doth.yml. Using the `doth install` command, you can install them.
+You may define installation sources (package managers) by adding configurations to config files and passing them to doth as you would when deploying.
+You may also use the --auto flag, which will search for common package managers available on your system.
+Make sure your deps use the correct keys for the source->package mapping when using auto.
+
+These package managers are automatically detected:
+
+- apt
+- dnf
+- pacman
+- paru
+- yay
+- yum
+- go
+- npm
+- brew
