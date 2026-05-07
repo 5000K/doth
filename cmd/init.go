@@ -28,9 +28,9 @@ This will create a doth.yaml file with the provided configuration, and a modules
 			fmt.Printf("Error getting verbose flag: %v\n", err)
 			return
 		}
-		force, err := cmd.Flags().GetBool("force")
+		destructive, err := cmd.Flags().GetBool("destructive")
 		if err != nil {
-			fmt.Printf("Error getting force flag: %v\n", err)
+			fmt.Printf("Error getting destructive flag: %v\n", err)
 			return
 		}
 		modulesDir, err := cmd.Flags().GetString("modules")
@@ -41,7 +41,7 @@ This will create a doth.yaml file with the provided configuration, and a modules
 
 		config := &model.InitConfig{
 			ModuleDir: modulesDir,
-			Force:     force,
+			Force:     destructive,
 		}
 		model.Init(config, dry, verbose)
 	},
@@ -53,5 +53,5 @@ func init() {
 	initCmd.Flags().StringP("modules", "m", "./modules", "The directory the modules are located in. Relative to the current working directory.")
 	initCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken without actually performing them.")
 	initCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when running commands.")
-	initCmd.Flags().BoolP("force", "f", false, "Force operations even if they already exist.")
+	initCmd.Flags().Bool("destructive", false, "Deletes and recreates the whole project. This should be used with caution.")
 }

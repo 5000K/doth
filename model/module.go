@@ -1,12 +1,11 @@
 package model
 
 type Dependency struct {
-	Name    string `yaml:"name"`
-	Version string `yaml:"version"`
+	Name string `yaml:"name"`
 
 	// a map of source -> package name.
 	// sources are provided by the user
-	Sources map[string]string `yaml:"sources"`
+	Packages map[string]string `yaml:"packages"`
 }
 
 type Module struct {
