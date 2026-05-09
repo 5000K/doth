@@ -2,9 +2,16 @@
 
 **doth** is a go-based .config manager for linux.
 
-It allows for config-based templating, so that you can write reusable dotfiles for all your systems.
 
-Show the battery state in the top bar on your laptop specifically? Support theming?
+```
+go install github.com/5000K/doth
+```
+
+## The idea
+
+**doth** can simply copy or symlink your files from your git repo. Or it can render them as templates.
+
+Show the battery state in the top bar on your laptop specifically? Deploy with different themes by simply passing another one into doth? Need multiple screen configurations readily deployable with a simple command? Doth is the tool for you. It's a bit more complex, but you are in control in return.
 
 ## Modules
 
