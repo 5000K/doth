@@ -10,15 +10,13 @@ import (
 
 // CleanPath tries to turn any path into a usable path (cleans up, expands ~ to home dir, and tries to turn it into an absolute path)
 func CleanPath(relativePath string) string {
-	relativePath = filepath.Clean(relativePath)
-
 	expandedPath := expandHomeDir(relativePath)
 
 	// try to get the absolute path, if it fails, return the cleaned relative path
 	absPath, err := filepath.Abs(expandedPath)
 
 	if err != nil {
-		return expandedPath
+		return filepath.Clean(expandedPath)
 	}
 
 	return absPath
@@ -58,4 +56,17 @@ func WriteConfigFile(path string, data []byte) error {
 
 func Delete(path string) error {
 	return os.RemoveAll(path)
+}
+
+func IsValidFolderName(name string) bool {
+	if name == "" {
+		return false
+	}
+	if strings.Contains(name, string(os.PathSeparator)) {
+		return false
+	}
+	if name == "." || name == ".." {
+		return false
+	}
+	return true
 }

@@ -315,3 +315,27 @@ func (s *ConfirmStep) ApplyDry(config PipelineConfig) (string, error) {
 	}
 	return "Ask for confirmation: " + s.message, nil
 }
+
+type LogStep struct {
+	message string
+	dryOnly bool
+}
+
+func NewLogStep(message string, dryOnly bool) PipelineModule {
+	return &LogStep{
+		message: message,
+		dryOnly: dryOnly,
+	}
+}
+
+func (s *LogStep) Apply(config PipelineConfig) error {
+	if s.dryOnly {
+		return nil
+	}
+	println(s.message)
+	return nil
+}
+
+func (s *LogStep) ApplyDry(config PipelineConfig) (string, error) {
+	return s.message, nil
+}

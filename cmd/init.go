@@ -1,6 +1,3 @@
-/*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -62,7 +59,13 @@ This will create a doth.yaml file with the provided configuration, and a modules
 			AddModule(model.NewCreateFileStep(model.DothFileLocation, []byte(model.DothFileTemplate), "default configuration file")).
 			AddModule(model.NewCreateFileStep(model.GitignoreFileLocation, []byte(model.GitignoreFileTemplate), "default .gitignore file"))
 
-		pipeline.Run(dry, verbose, config)
+		err = pipeline.Run(dry, verbose, config)
+
+		if err != nil {
+			fmt.Printf("Error initializing project: %v\n", err)
+		} else {
+			fmt.Println("Project initialized successfully.")
+		}
 	},
 }
 
@@ -73,5 +76,5 @@ func init() {
 	initCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken without actually performing them.")
 	initCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when running commands.")
 	initCmd.Flags().Bool("destructive", false, "Deletes and recreates the whole project. This should be used with caution.")
-	initCmd.Flags().BoolP("autoconfirm", "y", false, "Deletes and recreates the whole project. This should be used with caution.")
+	initCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'.")
 }

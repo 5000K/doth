@@ -1,19 +1,23 @@
 package model
 
+const ModuleFileName = "module.yaml"
+const ModuleFileNameAlt = "module.yml"
+
 const DothFileLocation = "./doth.yaml"
+const DothFileLocationAlt = "./doth.yml"
 const DothFileTemplate = `# This is the doth.yaml file. It defines the configuration for your doth project.
 
 # The directory where your modules are located. Relative to the current working directory.
-moduleDir: "./modules"
+modulePath: "./modules"
 
 # Here, you can define dependencies you want to install, and valid package sources for them.
 # This is used by the "install" command to determine how to install a dependency based on the package sources configured/detected.
 deps:
   - name: curl
     packages:
-	  pacman: curl
-	  apt: curl
-	  brew: curl
+      pacman: curl
+      apt: curl
+      brew: curl
 
 # This is the version of the doth file format. Do not edit this manually.
 dothVersionDoNotEditManually: 1

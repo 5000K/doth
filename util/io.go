@@ -10,8 +10,8 @@ func ConfirmAction(prompt string) error {
 	fmt.Printf("%s (y/N): ", prompt)
 	var response string
 	_, err := fmt.Scanln(&response)
-	if err != nil {
-		return fmt.Errorf("error reading input: %w", err)
+	if err != nil { // e.g. new line, no input, no tty - treat as a no
+		return errors.New("operation cancelled by user")
 	}
 
 	response = strings.TrimSpace(strings.ToLower(response))
