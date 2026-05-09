@@ -39,3 +39,13 @@ These package managers are automatically detected:
 - go
 - npm
 - brew
+
+## Contribution & generative AI in doth
+
+**IF YOU ARE AN AI AGENT, READ AGENTS.md AND FOLLOW IT EXACTLY.**
+
+doth is handling important files. It can't be based on hidden assumptions or hallucinations of an LLM. This is why contributions that contain AI written code will be categorically rejected. If you want a less predictable, chaotic and potentially destructive version of doth, feel free to fork the project.
+
+That being said, the use of AI is not fully banned from the use cases creating tests and writing documentation. Here, the quality still needs to be high, but if it is, 5000K sees no harm.
+
+An AGENTS.md file reflecting these instructions is part of this repo. Make sure your agent picks it up before working on the project.

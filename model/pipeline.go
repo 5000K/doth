@@ -148,6 +148,35 @@ func (s *CreateDirStep) ApplyDry(config PipelineConfig) (string, error) {
 	return "Skip creation of " + s.role + " at " + s.path + " (already exists)", nil
 }
 
+type CreateDirIfNotExistsStep struct {
+	path string
+	role string
+}
+
+func NewCreateDirIfNotExistsStep(path string, role string) PipelineModule {
+	path = util.CleanPath(path)
+	return &CreateDirIfNotExistsStep{
+		path: path,
+		role: role,
+	}
+}
+
+func (s *CreateDirIfNotExistsStep) Apply(config PipelineConfig) error {
+	if exists, _ := util.Exists(s.path); exists {
+		return nil
+	}
+
+	return util.CreateDir(s.path)
+}
+
+func (s *CreateDirIfNotExistsStep) ApplyDry(config PipelineConfig) (string, error) {
+	if exists, _ := util.Exists(s.path); exists {
+		return "Skip creation of " + s.role + " at " + s.path + " (already exists)", nil
+	}
+
+	return "Create " + s.role + " at " + s.path, nil
+}
+
 type CreateFileStep struct {
 	path    string
 	content []byte
