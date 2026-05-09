@@ -21,3 +21,12 @@ func ConfirmAction(prompt string) error {
 
 	return nil
 }
+
+func FormatHeader(title string) string {
+	width := len(title) + 2
+	width = max(width, 30)
+	padding := (width - len(title)) / 2
+
+	line := strings.Repeat("=", padding)
+	return fmt.Sprintf("%s[ %s ]%s\n", line, title, line)
+}

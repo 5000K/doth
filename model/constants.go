@@ -10,6 +10,9 @@ const DothFileTemplate = `# This is the doth.yaml file. It defines the configura
 # The directory where your modules are located. Relative to the current working directory.
 modulePath: "./modules"
 
+# Set to true if the deploy command should fail if no config files are provided.
+requireConfig: false
+
 # Here, you can define dependencies you want to install, and valid package sources for them.
 # This is used by the "install" command to determine how to install a dependency based on the package sources configured/detected.
 deps:

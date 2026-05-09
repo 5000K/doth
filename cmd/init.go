@@ -72,9 +72,9 @@ This will create a doth.yaml file with the provided configuration, and a modules
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringP("modules", "m", "./modules", "The directory the modules are located in. Relative to the current working directory.")
-	initCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken without actually performing them.")
-	initCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when running commands.")
-	initCmd.Flags().Bool("destructive", false, "Deletes and recreates the whole project. This should be used with caution.")
-	initCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'.")
+	initCmd.Flags().StringP("modules", "m", "./modules", "The directory the modules are located in. Relative to the current working directory")
+	initCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken without actually performing them")
+	initCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when running commands")
+	initCmd.Flags().Bool("destructive", false, "Deletes and recreates the whole project. This should be used with caution")
+	initCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'")
 }

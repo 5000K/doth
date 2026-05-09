@@ -62,8 +62,6 @@ func (p *Pipeline) Run(dry bool, verbose bool, config PipelineConfig) error {
 	} else {
 		return p.Apply(config)
 	}
-
-	return nil
 }
 
 func (p *Pipeline) Apply(input PipelineConfig) error {
@@ -281,11 +279,11 @@ func (s *CreateSymlinkStep) ApplyDry(config PipelineConfig) (string, error) {
 
 type RenderFileStep struct {
 	templatePath string
-	configMap    template.ConfigMap
+	configMap    ConfigMap
 	dst          string
 }
 
-func NewRenderFileStep(templatePath string, configMap template.ConfigMap, dst string) PipelineModule {
+func NewRenderFileStep(templatePath string, configMap ConfigMap, dst string) PipelineModule {
 	return &RenderFileStep{
 		templatePath: util.CleanPath(templatePath),
 		configMap:    configMap,
@@ -305,7 +303,7 @@ func (s *RenderFileStep) Apply(config PipelineConfig) error {
 		return err
 	}
 
-	rendered, err := template.RenderTemplate(string(tmplData), s.configMap)
+	rendered, err := template.RenderTemplate(string(tmplData), template.ConfigMap(s.configMap))
 	if err != nil {
 		return err
 	}

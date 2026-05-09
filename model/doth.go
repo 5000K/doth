@@ -21,31 +21,33 @@ type DothFile struct {
 
 	Deps []Dependency `yaml:"deps"`
 
+	RequireConfig bool `yaml:"requireConfig"`
+
 	// Version of doth used. Incompable versions will cause an error on load.
 	// There are automatic migrations from older->newer, but not the other way around.
 	DothFormatVersion uint32 `yaml:"dothVersionDoNotEditManually"`
 }
 
 func LoadDothFileFromCwd() (*DothFile, error) {
-	d, err := LoadDothFileFromPath(util.CleanPath(DothFileLocationAlt))
+	d, err := LoadConfigFileFromPath[DothFile](util.CleanPath(DothFileLocationAlt))
 	if err != nil {
-		return LoadDothFileFromPath(util.CleanPath(DothFileLocation))
+		return LoadConfigFileFromPath[DothFile](util.CleanPath(DothFileLocation))
 	}
 	return d, nil
 }
 
-func LoadDothFileFromPath(path string) (*DothFile, error) {
-	dothFile := &DothFile{}
+func LoadConfigFileFromPath[T any](path string) (*T, error) {
+	configFile := new(T)
 
 	file, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	err = yaml.Unmarshal(file, dothFile)
+	err = yaml.Unmarshal(file, configFile)
 	if err != nil {
 		return nil, err
 	}
 
-	return dothFile, nil
+	return configFile, nil
 }

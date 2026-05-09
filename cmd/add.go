@@ -92,13 +92,13 @@ func init() {
 	addCmd.Flags().StringP("target", "t", "", "Target path of the module")
 	addCmd.MarkFlagRequired("target")
 
-	addCmd.Flags().StringP("glob", "g", "**/*", "A glob pattern to specify which files to include when adding the module. This is relative to the target path.")
+	addCmd.Flags().StringP("glob", "g", "**/*", "A glob pattern to specify which files to include. Relative to the target path")
 
-	addCmd.Flags().BoolP("skip-existing", "s", false, "Skip copying existing files in the target path when adding a module")
-	addCmd.Flags().BoolP("destructive", "f", false, "Deletes and recreates the module if it already exists.")
-	addCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when adding a module")
-	addCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken when adding a module without actually performing them")
-	addCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'.")
+	addCmd.Flags().BoolP("skip-existing", "s", false, "Skip copying existing files in the target folder")
+	addCmd.Flags().BoolP("destructive", "f", false, "Deletes and recreates the module if it already exists")
+	addCmd.Flags().BoolP("verbose", "v", false, "Print verbose output")
+	addCmd.Flags().BoolP("dry", "d", false, "Print the actions that would be taken without actually performing them")
+	addCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'")
 }
 
 func planAddPipeline(name string, path string, skipExisting bool, destructive bool, glob string) *model.Pipeline {
