@@ -1,4 +1,5 @@
 # doth
+[![CI](https://github.com/5000K/doth/actions/workflows/ci.yml/badge.svg)](https://github.com/5000K/doth/actions/workflows/ci.yml)
 
 **doth** is a go-based .config manager for linux.
 
