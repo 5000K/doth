@@ -1,8 +1,0 @@
-skip: false
-basepath: ""
-files:
-    - name: package-lock.json
-      strategy: copy
-    - name: package.json
-      strategy: copy
-target: /home/coder/.config/kilo
