@@ -57,7 +57,8 @@ This will create a doth.yaml file with the provided configuration, and a modules
 			AddModule(model.NewCreateDirStep(modulesDir, "modules directory")).
 			AddModule(model.NewCreateDirStep(model.LocalStateDir, "local state directory")).
 			AddModule(model.NewCreateFileStep(model.DothFileLocation, []byte(model.DothFileTemplate), "default configuration file")).
-			AddModule(model.NewCreateFileStep(model.GitignoreFileLocation, []byte(model.GitignoreFileTemplate), "default .gitignore file"))
+			AddModule(model.NewCreateFileStep(model.GitignoreFileLocation, []byte(model.GitignoreFileTemplate), "default .gitignore file")).
+			AddModule(model.NewCreateFileStepWithPermissions(model.DothShWrapperLocation, []byte(model.DothShWrapperTemplate), "doth.sh wrapper script", 0755))
 
 		err = pipeline.Run(dry, verbose, config)
 

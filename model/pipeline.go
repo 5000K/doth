@@ -176,17 +176,29 @@ func (s *CreateDirIfNotExistsStep) ApplyDry(config PipelineConfig) (string, erro
 }
 
 type CreateFileStep struct {
-	path    string
-	content []byte
-	role    string
+	path        string
+	content     []byte
+	role        string
+	permissions os.FileMode
 }
 
 func NewCreateFileStep(path string, content []byte, role string) PipelineModule {
 	path = util.CleanPath(path)
 	return &CreateFileStep{
-		path:    path,
-		content: content,
-		role:    role,
+		path:        path,
+		content:     content,
+		role:        role,
+		permissions: 0644,
+	}
+}
+
+func NewCreateFileStepWithPermissions(path string, content []byte, role string, permissions os.FileMode) PipelineModule {
+	path = util.CleanPath(path)
+	return &CreateFileStep{
+		path:        path,
+		content:     content,
+		role:        role,
+		permissions: permissions,
 	}
 }
 
@@ -201,7 +213,7 @@ func (s *CreateFileStep) Apply(config PipelineConfig) error {
 		}
 	}
 
-	return util.WriteConfigFile(s.path, s.content)
+	return os.WriteFile(s.path, s.content, s.permissions)
 }
 
 func (s *CreateFileStep) ApplyDry(config PipelineConfig) (string, error) {
