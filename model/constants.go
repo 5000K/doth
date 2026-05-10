@@ -33,8 +33,7 @@ dothVersionDoNotEditManually: 1
 
 const DothShWrapperLocation = "./doth.sh"
 
-const DothShWrapperTemplate = `
-#!/bin/bash
+const DothShWrapperTemplate = `#!/bin/bash
 
 # This is a wrapper script for doth. It ensures that go and doth are installed, and if not, it installs it. Then it calls doth with the provided arguments.
 
@@ -42,39 +41,45 @@ ROOT_DIR=$(dirname "$(realpath "$0")")
 
 GO_VERSION=1.26.2
 TARGET_FOLDER=${ROOT_DIR}/.doth/go
+GOPATH_FOLDER=${ROOT_DIR}/.doth/gopath
+
+GO_COMMAND=${TARGET_FOLDER}/bin/go
 
 
 # set paths for this script
-export PATH=${TARGET_FOLDER}/bin:$PATH
-export GOPATH=${TARGET_FOLDER}
-export GOBIN=${TARGET_FOLDER}/bin
+export GOPATH=${GOPATH_FOLDER}
+export GOBIN=${GOPATH_FOLDER}/bin
+export PATH=${TARGET_FOLDER}/bin:${GOBIN}:$PATH
 
 setup_go() {
     # check if Go is already installed
-    if command -v go &> /dev/null; then
+    if command -v ${GO_COMMAND} &> /dev/null; then
         echo "Go is already installed. Skipping installation."
         return
     fi
     
+    echo "Go is not installed. Installing Go ${GO_VERSION}..."
+    
     # Install Go
-    curl -L -o go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
     mkdir -p ${TARGET_FOLDER}
-    tar -C ${TARGET_FOLDER} --strip-components=1 -xzf go.tar.gz
-    rm go.tar.gz
+    mkdir -p ${GOBIN}
+    curl -Ls -o ${ROOT_DIR}/.doth/go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
+    tar -C ${TARGET_FOLDER} --strip-components=1 -xzf ${ROOT_DIR}/.doth/go.tar.gz
+    rm ${ROOT_DIR}/.doth/go.tar.gz
 }
 
 setup_doth() {
-    go install github.com/5000K/doth
+    ${GO_COMMAND} install github.com/5000K/doth
 }
 
 check_doth_version() {
-    NEW_VERSION=$(curl -L https://github.com/5000K/doth/releases/latest/download/version.txt)
-    CURRENT_VERSION=$(doth --version --raw)
+    NEW_VERSION=$(curl -Ls https://github.com/5000K/doth/releases/latest/download/version.txt)
+    CURRENT_VERSION=$(doth version --raw)
     if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
         echo "A new version of doth is available: $NEW_VERSION. You have $CURRENT_VERSION. Updating..."
-        go install github.com/5000K/doth@$NEW_VERSION
-    else
-        echo "You have the latest version of doth: $CURRENT_VERSION."
+        chmod -R u+w ${GOPATH_FOLDER}/**
+        rm -rf ${GOPATH_FOLDER}
+        ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
     fi
 }
 
@@ -84,11 +89,12 @@ if ! command -v doth &> /dev/null; then
     setup_go
     setup_doth
 else
-  check_doth_version
+    check_doth_version
 fi
 
 # call doth with the provided arguments
 doth "$@"
+
 `
 
 const GitignoreFileLocation = "./.gitignore"

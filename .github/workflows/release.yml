@@ -1,9 +1,12 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag (e.g. v1.0.0)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -12,6 +15,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate version tag
+        run: |
+          if [[ ! "${{ inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: version tag '${{ inputs.version }}' does not match required format v0.0.0"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -22,12 +32,13 @@ jobs:
 
       - name: Update version file
         run: |
-          echo -n "${{ github.ref_name }}" > model/_version.txt
+          echo -n "${{ inputs.version }}" > model/_version.txt
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add model/_version.txt
           git commit -m "release pipeline: update version tag"
-          git push origin HEAD:${{ github.event.repository.default_branch }}
+          git tag ${{ inputs.version }}
+          git push origin HEAD:${{ github.event.repository.default_branch }} ${{ inputs.version }}
 
       - name: Get module name
         run: echo "MODULE_NAME=$(go list -m)" >> $GITHUB_ENV
@@ -61,6 +72,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.version }}
           files: dist/*
           generate_release_notes: true
         env:
