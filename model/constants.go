@@ -33,10 +33,6 @@ dothVersionDoNotEditManually: 1
 
 const DothShWrapperLocation = "./doth.sh"
 
-func GetDothShWrapper() []byte {
-	return []byte(DothShWrapperTemplate)
-}
-
 const DothShWrapperTemplate = `
 #!/bin/bash
 
@@ -71,11 +67,24 @@ setup_doth() {
     go install github.com/5000K/doth
 }
 
+check_doth_version() {
+    NEW_VERSION=$(curl -L https://github.com/5000K/doth/releases/latest/download/version.txt)
+    CURRENT_VERSION=$(doth --version --raw)
+    if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
+        echo "A new version of doth is available: $NEW_VERSION. You have $CURRENT_VERSION. Updating..."
+        go install github.com/5000K/doth@$NEW_VERSION
+    else
+        echo "You have the latest version of doth: $CURRENT_VERSION."
+    fi
+}
+
 # is doth available?
 if ! command -v doth &> /dev/null; then
     echo "Doth is not installed. Installing Go and Doth..."
     setup_go
     setup_doth
+else
+  check_doth_version
 fi
 
 # call doth with the provided arguments
