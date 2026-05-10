@@ -47,6 +47,7 @@ jobs:
         run: |
           mkdir -p dist
           cp model/_version.txt dist/version.txt
+          cp model/constants/doth.sh dist/doth.sh
 
           platforms=(
             "linux/amd64"
