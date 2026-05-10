@@ -9,13 +9,11 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "doth",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "A go-based dotfiles manager.",
+	Long: `doth is a go-based dotfiles manager. It allows you to manage your dotfiles in a modular way, by copy, symlink or templating.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+It also allows for cleanly definining dependencies needed for your dotfiles, and can install them for you.
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
