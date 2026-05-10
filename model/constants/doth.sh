@@ -54,8 +54,8 @@ setup_go() {
 
 setup_doth() {
     echo "Installing the current version of doth..."
-    CURRENT_VERSION=$(doth version --raw)
-    ${GO_COMMAND} install github.com/5000K/doth@$CURRENT_VERSION
+    NEW_VERSION=$(curl -Ls https://github.com/5000K/doth/releases/latest/download/version.txt)
+    ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
 }
 
 check_doth_version() {
