@@ -55,6 +55,12 @@ func WriteConfigFile(path string, data []byte) error {
 }
 
 func Delete(path string) error {
+	_ = filepath.WalkDir(path, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+		return os.Chmod(p, 0700)
+	})
 	return os.RemoveAll(path)
 }
 

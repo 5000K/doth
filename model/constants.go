@@ -51,24 +51,44 @@ export GOPATH=${GOPATH_FOLDER}
 export GOBIN=${GOPATH_FOLDER}/bin
 export PATH=${TARGET_FOLDER}/bin:${GOBIN}:$PATH
 
+detect_platform() {
+    local os arch
+    os=$(uname -s | tr '[:upper:]' '[:lower:]')
+    arch=$(uname -m)
+
+    case "$os" in
+        linux)  GO_OS="linux" ;;
+        darwin) GO_OS="darwin" ;;
+        *) echo "Unsupported OS: $os"; exit 1 ;;
+    esac
+
+    case "$arch" in
+        x86_64)         GO_ARCH="amd64" ;;
+        aarch64|arm64)  GO_ARCH="arm64" ;;
+        armv6l|armv7l)  GO_ARCH="armv6l" ;;
+        *) echo "Unsupported architecture: $arch"; exit 1 ;;
+    esac
+}
+
 setup_go() {
     # check if Go is already installed
     if command -v ${GO_COMMAND} &> /dev/null; then
-        echo "Go is already installed. Skipping installation."
         return
     fi
-    
-    echo "Go is not installed. Installing Go ${GO_VERSION}..."
-    
+
+    detect_platform
+    echo "Installing Go ${GO_VERSION} (${GO_OS}-${GO_ARCH})..."
+
     # Install Go
     mkdir -p ${TARGET_FOLDER}
     mkdir -p ${GOBIN}
-    curl -Ls -o ${ROOT_DIR}/.doth/go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
+    curl -Ls -o ${ROOT_DIR}/.doth/go.tar.gz https://go.dev/dl/go${GO_VERSION}.${GO_OS}-${GO_ARCH}.tar.gz
     tar -C ${TARGET_FOLDER} --strip-components=1 -xzf ${ROOT_DIR}/.doth/go.tar.gz
     rm ${ROOT_DIR}/.doth/go.tar.gz
 }
 
 setup_doth() {
+    echo "Installing the current version of doth..."
     ${GO_COMMAND} install github.com/5000K/doth
 }
 
@@ -85,7 +105,6 @@ check_doth_version() {
 
 # is doth available?
 if ! command -v doth &> /dev/null; then
-    echo "Doth is not installed. Installing Go and Doth..."
     setup_go
     setup_doth
 else
@@ -94,7 +113,6 @@ fi
 
 # call doth with the provided arguments
 doth "$@"
-
 `
 
 const GitignoreFileLocation = "./.gitignore"
