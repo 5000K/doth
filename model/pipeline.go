@@ -315,7 +315,7 @@ func (s *RenderFileStep) Apply(config PipelineConfig) error {
 		return err
 	}
 
-	rendered, err := template.RenderTemplate(string(tmplData), template.ConfigMap(s.configMap))
+	rendered, err := template.RenderTemplate(string(tmplData), s.configMap)
 	if err != nil {
 		return err
 	}
