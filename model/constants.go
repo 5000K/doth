@@ -17,7 +17,7 @@ var DothFileTemplate string
 const DothShWrapperLocation = "./doth.sh"
 
 //go:embed constants/doth.sh
-var DothShWrapperTemplate string
+var DothShWrapper string
 
 const GitignoreFileLocation = "./.gitignore"
 

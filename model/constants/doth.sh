@@ -56,6 +56,7 @@ setup_doth() {
     echo "Installing the current version of doth..."
     NEW_VERSION=$(curl -Ls https://github.com/5000K/doth/releases/latest/download/version.txt)
     ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
+    doth wrapper > "$0"
 }
 
 check_doth_version() {
@@ -66,6 +67,9 @@ check_doth_version() {
         chmod -R u+w ${GOPATH_FOLDER}/**
         rm -rf ${GOPATH_FOLDER}
         ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
+        echo "Updating wrapper script..."
+        doth wrapper > "$0"
+        chmod +x "$0"
     fi
 }
 
