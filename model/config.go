@@ -37,7 +37,7 @@ type PackageConfig struct {
 	    command: "npm install -g {package}"
 
 	*/
-	PackageSources []PackageSource
+	PackageSources []PackageSource `yaml:"packageSources"`
 }
 
 func (configMap ConfigMap) GetPackageConfig() (*PackageConfig, error) {

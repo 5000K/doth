@@ -29,6 +29,12 @@ var installCmd = &cobra.Command{
 			return
 		}
 
+		silent, err := cmd.Flags().GetBool("silent")
+		if err != nil {
+			fmt.Printf("Error getting silent flag: %v\n", err)
+			return
+		}
+
 		configPaths, err := cmd.Flags().GetStringSlice("config")
 		if err != nil {
 			fmt.Println("failed to get config paths: " + err.Error())
@@ -57,37 +63,37 @@ var installCmd = &cobra.Command{
 		if cmd.Flags().Changed("apt") {
 			sources = append(sources, model.PackageSource{
 				Name:    "apt",
-				Command: "sudo apt install {package}",
+				Command: "sudo apt install --yes {package}",
 			})
 		}
 		if cmd.Flags().Changed("apt-get") {
 			sources = append(sources, model.PackageSource{
 				Name:    "apt-get",
-				Command: "sudo apt-get install {package}",
+				Command: "sudo apt-get install --yes {package}",
 			})
 		}
 		if cmd.Flags().Changed("dnf") {
 			sources = append(sources, model.PackageSource{
 				Name:    "dnf",
-				Command: "sudo dnf install {package}",
+				Command: "sudo dnf install --assumeyes {package}",
 			})
 		}
 		if cmd.Flags().Changed("pacman") {
 			sources = append(sources, model.PackageSource{
 				Name:    "pacman",
-				Command: "sudo pacman -S {package}",
+				Command: "sudo pacman -S --noconfirm {package}",
 			})
 		}
 		if cmd.Flags().Changed("yay") {
 			sources = append(sources, model.PackageSource{
 				Name:    "yay",
-				Command: "yay -S {package}",
+				Command: "yay -S --noconfirm {package}",
 			})
 		}
 		if cmd.Flags().Changed("paru") {
 			sources = append(sources, model.PackageSource{
 				Name:    "paru",
-				Command: "paru -S {package}",
+				Command: "paru -S --noconfirm {package}",
 			})
 		}
 		if cmd.Flags().Changed("go") {
@@ -105,11 +111,11 @@ var installCmd = &cobra.Command{
 		if cmd.Flags().Changed("brew") {
 			sources = append(sources, model.PackageSource{
 				Name:    "brew",
-				Command: "brew install {package}",
+				Command: "yes | brew install {package}",
 			})
 		}
 
-		planInstall(sources).Run(
+		planInstall(sources, silent).Run(
 			dry, verbose, model.CreatePipelineConfig(
 				true, false, // no autoconfirm for anything that executes shell code unescaped
 			))
@@ -123,6 +129,7 @@ func init() {
 
 	installCmd.Flags().BoolP("dry", "d", false, "Print the dependencies that would be installed without actually installing them.")
 	installCmd.Flags().BoolP("verbose", "v", false, "Print verbose output.")
+	installCmd.Flags().BoolP("silent", "s", false, "Run shell commands silently without output.")
 
 	// source flags
 	installCmd.Flags().Bool("apt", false, "Use apt to install dependencies")
@@ -146,7 +153,7 @@ func collectDependencies() []model.Dependency {
 		return make([]model.Dependency, 0)
 	}
 
-	dependencies := make([]model.Dependency, len(doth.Deps))
+	dependencies := make([]model.Dependency, 0)
 	dependencies = append(dependencies, doth.Deps...)
 
 	modules := readModules()
@@ -175,8 +182,14 @@ func collectDependencies() []model.Dependency {
 	return uniqueDependencies
 }
 
-func planInstall(sources []model.PackageSource) *model.Pipeline {
-	pipeline := model.NewPipeline().AddModule(model.NewConfirmStep("doth install gives this doth project shell execution rights. Only continue if you trust this project 10000% (=> you wrote it)."))
+func planInstall(sources []model.PackageSource, silent bool) *model.Pipeline {
+	if len(sources) == 0 {
+		fmt.Println("No package sources provided. Please provide at least one package source using the --config flag or the source flags (e.g. --apt, --pacman, etc.).")
+		return model.NewPipeline()
+	}
+
+	pipeline := model.NewPipeline().
+		AddModule(model.NewConfirmStep("doth install gives this doth project shell execution rights. Use -d to preview the commands that would run.\nProceed?"))
 
 	deps := collectDependencies()
 
@@ -185,11 +198,16 @@ func planInstall(sources []model.PackageSource) *model.Pipeline {
 		for _, source := range sources {
 			packageName, ok := dep.Packages[source.Name]
 			if !ok {
+				pipeline.AddModule(model.NewLogStep(fmt.Sprintf("No package source found for dependency %s with source %s, skipping...", dep.Name, source.Name), false))
 				continue
 			}
 
+			if !silent {
+				pipeline.AddModule(model.NewLogStep(fmt.Sprintf("\nInstall dependency %s using source %s ", dep.Name, source.Name), false))
+			}
+
 			command := strings.ReplaceAll(source.Command, "{package}", packageName)
-			pipeline.AddModule(model.NewExecuteShellCommandStep(command))
+			pipeline.AddModule(model.NewExecuteShellCommandStep(command, silent))
 			break
 		}
 	}

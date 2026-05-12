@@ -353,7 +353,7 @@ func (s *ConfirmStep) ApplyDry(config PipelineConfig) (string, error) {
 	if config.Autoconfirm() {
 		return "Auto-confirm enabled:\n\t" + s.message + " (y/N) y", nil
 	}
-	return "Ask for confirmation: " + s.message, nil
+	return "Ask for confirmation", nil
 }
 
 type LogStep struct {
@@ -382,16 +382,27 @@ func (s *LogStep) ApplyDry(config PipelineConfig) (string, error) {
 
 type ExecuteShellCommandStep struct {
 	command string
+	silent  bool
 }
 
-func NewExecuteShellCommandStep(command string) PipelineModule {
+func NewExecuteShellCommandStep(command string, silent bool) PipelineModule {
 	return &ExecuteShellCommandStep{
 		command: command,
+		silent:  silent,
 	}
 }
 
 func (s *ExecuteShellCommandStep) Apply(config PipelineConfig) error {
-	return exec.Command("/bin/sh", "-c", s.command).Run()
+	cmd := exec.Command("/bin/sh", "-c", s.command)
+	cmd.Env = os.Environ()
+
+	if !s.silent {
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	return cmd.Run()
 }
 
 func (s *ExecuteShellCommandStep) ApplyDry(config PipelineConfig) (string, error) {
