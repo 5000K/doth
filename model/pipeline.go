@@ -2,6 +2,7 @@ package model
 
 import (
 	"os"
+	"os/exec"
 
 	"github.com/5000K/doth/template"
 	"github.com/5000K/doth/util"
@@ -377,4 +378,22 @@ func (s *LogStep) Apply(config PipelineConfig) error {
 
 func (s *LogStep) ApplyDry(config PipelineConfig) (string, error) {
 	return s.message, nil
+}
+
+type ExecuteShellCommandStep struct {
+	command string
+}
+
+func NewExecuteShellCommandStep(command string) PipelineModule {
+	return &ExecuteShellCommandStep{
+		command: command,
+	}
+}
+
+func (s *ExecuteShellCommandStep) Apply(config PipelineConfig) error {
+	return exec.Command("/bin/sh", "-c", s.command).Run()
+}
+
+func (s *ExecuteShellCommandStep) ApplyDry(config PipelineConfig) (string, error) {
+	return "Run command: " + s.command, nil
 }
