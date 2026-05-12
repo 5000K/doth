@@ -132,6 +132,7 @@ func planAddPipeline(name string, path string, skipExisting bool, destructive bo
 	module := model.Module{
 		Skip:   false,
 		Files:  make([]model.ModuleFile, 0),
+		Deps:   make([]model.Dependency, 0),
 		Target: path,
 	}
 

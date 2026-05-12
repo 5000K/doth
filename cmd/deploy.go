@@ -30,7 +30,7 @@ If a module has dependencies, they will be installed first using the appropriate
 		// 0 configs are valid - not every user needs configs.
 		var configs model.ConfigMap = nil
 
-		if len(configs) > 0 {
+		if len(configPaths) > 0 {
 			configs, err = model.LoadConfigFiles(configPaths)
 			if err != nil {
 				fmt.Println("failed to load config files: " + err.Error())
@@ -109,12 +109,12 @@ func planDeploy(configs model.ConfigMap) *model.Pipeline {
 	for _, mod := range modules {
 		for _, file := range mod.Files {
 			sourcePath := filepath.Join(mod.BasePath, file.Name)
-			targetPath := util.CleanPath(file.Name)
+			targetPath := util.CleanPath(filepath.Join(mod.Target, file.Name))
 
 			switch file.Strategy {
 			case model.StrategyCopy:
 				pipeline.AddModule(model.NewCopyFileStep(sourcePath, targetPath))
-			case model.StrategySymlink:
+			case model.StrategyLink:
 				pipeline.AddModule(model.NewCreateSymlinkStep(sourcePath, targetPath))
 			case model.StrategyRender:
 				pipeline.AddModule(model.NewRenderFileStep(sourcePath, configs, targetPath))

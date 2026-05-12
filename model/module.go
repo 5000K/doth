@@ -1,18 +1,20 @@
 package model
 
 type Module struct {
-	Skip     bool         `yaml:"skip"` // if true, the module will be fully ignored when deploying
-	BasePath string       // module path on disk, dynamically set when loading
-	Files    []ModuleFile `yaml:"files"`
-	Target   string       `yaml:"target"`
+	Target string       `yaml:"target"`
+	Skip   bool         `yaml:"skip"` // if true, the module will be fully ignored when deploying
+	Files  []ModuleFile `yaml:"files"`
+	Deps   []Dependency `yaml:"deps"`
+
+	BasePath string `yaml:"-"` // module path on disk, dynamically set when loading
 }
 
 type FileStrategy string
 
 const (
-	StrategyCopy    FileStrategy = "copy"
-	StrategySymlink FileStrategy = "symlink"
-	StrategyRender  FileStrategy = "render"
+	StrategyCopy   FileStrategy = "copy"
+	StrategyLink   FileStrategy = "link"
+	StrategyRender FileStrategy = "render"
 )
 
 type ModuleFile struct {

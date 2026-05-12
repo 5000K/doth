@@ -6,11 +6,8 @@ import (
 	"text/template"
 )
 
-type ConfigMap map[string]any
-
-func RenderTemplate(templateStr string, data ConfigMap) (string, error) {
+func RenderTemplate(templateStr string, data any) (string, error) {
 	tmpl, err := template.New("template").Parse(templateStr)
-	tmpl = tmpl.Option("missingkey=zero")
 	if err != nil {
 		return "", fmt.Errorf("parsing template: %w", err)
 	}
