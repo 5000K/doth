@@ -23,6 +23,10 @@ If the target directory already exists, all existing files will be added with th
 This can be skipped with the --skip-existing flag (-s).
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		if util.ConfirmRunIfRoot() == false {
+			return
+		}
+
 		name, err := cmd.Flags().GetString("name")
 		if err != nil {
 			fmt.Printf("Error getting name flag: %v\n", err)

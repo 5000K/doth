@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This is a wrapper script for doth. It ensures that go and doth are installed, and if not, it installs it. Then it calls doth with the provided arguments.
+# This is a one-time bootstrapping script to initialize a fully self-contained doth project, including the current wrapper.
 
 ROOT_DIR=$(dirname "$(realpath "$0")")
 
@@ -10,7 +10,6 @@ GOPATH_FOLDER=${ROOT_DIR}/.doth/gopath
 
 GO_COMMAND=${TARGET_FOLDER}/bin/go
 
-DOTH_LOCK=${ROOT_DIR}/doth.lock
 
 # set paths for this script
 export GOPATH=${GOPATH_FOLDER}
@@ -54,41 +53,18 @@ setup_go() {
 }
 
 setup_doth() {
-    if [[ -f "${DOTH_LOCK}" ]]; then
-        NEW_VERSION=$(cat "${DOTH_LOCK}")
-    else
-        NEW_VERSION=$(curl -Ls https://github.com/5000K/doth/releases/latest/download/version.txt)
-    fi
-    echo "Installing doth ${NEW_VERSION}..."
-    ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
-    doth wrapper > "$0"
-}
-
-update_doth() {
-    if [[ -f "${DOTH_LOCK}" ]]; then
-        return
-    fi
-
+    echo "Installing the current version of doth..."
     NEW_VERSION=$(curl -Ls https://github.com/5000K/doth/releases/latest/download/version.txt)
-    CURRENT_VERSION=$(doth version --raw)
-    if [ "$NEW_VERSION" != "$CURRENT_VERSION" ]; then
-        echo "A new version of doth is available: $NEW_VERSION. You have $CURRENT_VERSION. Updating..."
-        chmod -R u+w ${GOPATH_FOLDER}/**
-        rm -rf ${GOPATH_FOLDER}
-        ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
-        echo "Updating wrapper script..."
-        doth wrapper > "$0"
-        chmod +x "$0"
-    fi
+    ${GO_COMMAND} install github.com/5000K/doth@$NEW_VERSION
 }
-
 # is doth available?
 if ! command -v doth &> /dev/null; then
     setup_go
     setup_doth
-else
-    update_doth
 fi
 
-# call doth with the provided arguments
-doth "$@"
+# initialize a fresh doth project
+doth init --modules ./modules --verbose
+
+echo "doth is initialized and ready to use!"
+echo "instead of installing doth globally, use ./doth.sh to run the current version of doth."
