@@ -25,3 +25,5 @@ const GitignoreFileLocation = "./.gitignore"
 var GitignoreFileTemplate string
 
 const LocalStateDir = "./.doth"
+
+const DothLockFileLocation = "./doth.lock"

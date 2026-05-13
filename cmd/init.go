@@ -49,7 +49,10 @@ This will create a doth.yaml file with the provided configuration, and a modules
 
 		pipeline := model.NewPipeline()
 
-		if destructive {
+		_, err = model.LoadDothFileFromCwd()
+
+		// ask for confirmation if doth is already set up
+		if destructive && err == nil {
 			pipeline.AddModule(model.NewConfirmStep("Force create a new project?"))
 		}
 

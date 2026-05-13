@@ -20,6 +20,9 @@ Takes in one or more config.yaml files that will be applied when deploying the m
 This command will copy, symlink, or render the files from the modules to their respective target locations based on the defined strategies.
 If a module has dependencies, they will be installed first using the appropriate strategies.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if util.ConfirmRunIfRoot() == false {
+			return
+		}
 
 		configPaths, err := cmd.Flags().GetStringSlice("config")
 		if err != nil {
