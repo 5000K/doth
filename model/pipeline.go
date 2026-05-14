@@ -170,7 +170,7 @@ func (s *CreateDirIfNotExistsStep) Apply(config PipelineConfig) error {
 
 func (s *CreateDirIfNotExistsStep) ApplyDry(config PipelineConfig) (string, error) {
 	if exists, _ := util.Exists(s.path); exists {
-		return "Skip creation of " + s.role + " at " + s.path + " (already exists)", nil
+		return "", nil
 	}
 
 	return "Create " + s.role + " at " + s.path, nil

@@ -195,12 +195,15 @@ func planInstall(sources []model.PackageSource, silent bool) *model.Pipeline {
 
 	for _, dep := range deps {
 		// find the first source that has a matching package entry for this dependency
+		found := false
+
 		for _, source := range sources {
 			packageName, ok := dep.Packages[source.Name]
 			if !ok {
-				pipeline.AddModule(model.NewLogStep(fmt.Sprintf("No package source found for dependency %s with source %s, skipping...", dep.Name, source.Name), false))
 				continue
 			}
+
+			found = true
 
 			if !silent {
 				pipeline.AddModule(model.NewLogStep(fmt.Sprintf("\nInstall dependency %s using source %s ", dep.Name, source.Name), false))
@@ -209,6 +212,10 @@ func planInstall(sources []model.PackageSource, silent bool) *model.Pipeline {
 			command := strings.ReplaceAll(source.Command, "{package}", packageName)
 			pipeline.AddModule(model.NewExecuteShellCommandStep(command, silent))
 			break
+		}
+
+		if !found {
+			fmt.Printf("No package source found for dependency %s. Skipping.\n", dep.Name)
 		}
 	}
 
