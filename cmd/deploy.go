@@ -113,6 +113,10 @@ func planDeploy(configs model.ConfigMap) *model.Pipeline {
 		for _, file := range mod.Files {
 			sourcePath := filepath.Join(mod.BasePath, file.Name)
 			targetPath := util.CleanPath(filepath.Join(mod.Target, file.Name))
+			targetFolder := filepath.Dir(targetPath)
+
+			// Ensure the target folder exists
+			pipeline.AddModule(model.NewCreateDirIfNotExistsStep(targetFolder, file.Name))
 
 			switch file.Strategy {
 			case model.StrategyCopy:
