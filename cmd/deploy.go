@@ -120,39 +120,43 @@ func planDeploy(configs model.ConfigMap) *model.Pipeline {
 			}
 
 			var makeStep func(src, dst string) model.PipelineModule
+			var recurseIntoDir bool
 			switch file.Strategy {
 			case model.StrategyCopy:
 				makeStep = func(src, dst string) model.PipelineModule {
 					return model.NewCopyFileStep(src, dst)
 				}
+				recurseIntoDir = true
 			case model.StrategyLink:
 				makeStep = func(src, dst string) model.PipelineModule {
 					return model.NewCreateSymlinkStep(src, dst)
 				}
+				recurseIntoDir = false
 			case model.StrategyRender:
 				makeStep = func(src, dst string) model.PipelineModule {
 					return model.NewRenderFileStep(src, configs, dst)
 				}
+				recurseIntoDir = true
 			default:
 				fmt.Printf("unknown strategy %s for file %s in module %s\n", file.Strategy, file.Name, mod.BasePath)
 				continue
 			}
 
-			addStrategySteps(pipeline, sourcePath, targetPath, makeStep)
+			addStrategySteps(pipeline, sourcePath, targetPath, recurseIntoDir, makeStep)
 		}
 	}
 
 	return pipeline
 }
 
-func addStrategySteps(pipeline *model.Pipeline, sourcePath, targetPath string, makeStep func(src, dst string) model.PipelineModule) {
+func addStrategySteps(pipeline *model.Pipeline, sourcePath, targetPath string, recurseIntoDir bool, makeStep func(src, dst string) model.PipelineModule) {
 	info, err := os.Stat(sourcePath)
 	if err != nil {
 		fmt.Printf("failed to stat %s: %v\n", sourcePath, err)
 		return
 	}
 
-	if info.IsDir() {
+	if info.IsDir() && recurseIntoDir {
 		entries, err := os.ReadDir(sourcePath)
 		if err != nil {
 			fmt.Printf("failed to read directory %s: %v\n", sourcePath, err)
@@ -162,6 +166,7 @@ func addStrategySteps(pipeline *model.Pipeline, sourcePath, targetPath string, m
 			addStrategySteps(pipeline,
 				filepath.Join(sourcePath, entry.Name()),
 				filepath.Join(targetPath, entry.Name()),
+				recurseIntoDir,
 				makeStep,
 			)
 		}
