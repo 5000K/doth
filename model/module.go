@@ -21,5 +21,6 @@ type ModuleFile struct {
 	// Name is the filename or relative path to the file within the module folder - may use glob patterns
 	Name string `yaml:"name"`
 	// Strategy is the strategy to use when deploying the file to it's target location. Defaults to "copy".
-	Strategy FileStrategy `yaml:"strategy"`
+	Strategy       FileStrategy `yaml:"strategy"`
+	TargetOverride string       `yaml:"target"` // if set, this path will be used instead of the default target path (module target + file name)
 }

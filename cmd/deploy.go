@@ -115,6 +115,10 @@ func planDeploy(configs model.ConfigMap) *model.Pipeline {
 			sourcePath := filepath.Join(mod.BasePath, file.Name)
 			targetPath := util.CleanPath(filepath.Join(mod.Target, file.Name))
 
+			if len(file.TargetOverride) > 0 {
+				targetPath = util.CleanPath(file.TargetOverride)
+			}
+
 			var makeStep func(src, dst string) model.PipelineModule
 			switch file.Strategy {
 			case model.StrategyCopy:
