@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/5000K/doth/model"
@@ -113,23 +114,56 @@ func planDeploy(configs model.ConfigMap) *model.Pipeline {
 		for _, file := range mod.Files {
 			sourcePath := filepath.Join(mod.BasePath, file.Name)
 			targetPath := util.CleanPath(filepath.Join(mod.Target, file.Name))
-			targetFolder := filepath.Dir(targetPath)
 
-			// Ensure the target folder exists
-			pipeline.AddModule(model.NewCreateDirIfNotExistsStep(targetFolder, file.Name))
-
+			var makeStep func(src, dst string) model.PipelineModule
 			switch file.Strategy {
 			case model.StrategyCopy:
-				pipeline.AddModule(model.NewCopyFileStep(sourcePath, targetPath))
+				makeStep = func(src, dst string) model.PipelineModule {
+					return model.NewCopyFileStep(src, dst)
+				}
 			case model.StrategyLink:
-				pipeline.AddModule(model.NewCreateSymlinkStep(sourcePath, targetPath))
+				makeStep = func(src, dst string) model.PipelineModule {
+					return model.NewCreateSymlinkStep(src, dst)
+				}
 			case model.StrategyRender:
-				pipeline.AddModule(model.NewRenderFileStep(sourcePath, configs, targetPath))
+				makeStep = func(src, dst string) model.PipelineModule {
+					return model.NewRenderFileStep(src, configs, dst)
+				}
 			default:
 				fmt.Printf("unknown strategy %s for file %s in module %s\n", file.Strategy, file.Name, mod.BasePath)
+				continue
 			}
+
+			addStrategySteps(pipeline, sourcePath, targetPath, makeStep)
 		}
 	}
 
 	return pipeline
+}
+
+func addStrategySteps(pipeline *model.Pipeline, sourcePath, targetPath string, makeStep func(src, dst string) model.PipelineModule) {
+	info, err := os.Stat(sourcePath)
+	if err != nil {
+		fmt.Printf("failed to stat %s: %v\n", sourcePath, err)
+		return
+	}
+
+	if info.IsDir() {
+		entries, err := os.ReadDir(sourcePath)
+		if err != nil {
+			fmt.Printf("failed to read directory %s: %v\n", sourcePath, err)
+			return
+		}
+		for _, entry := range entries {
+			addStrategySteps(pipeline,
+				filepath.Join(sourcePath, entry.Name()),
+				filepath.Join(targetPath, entry.Name()),
+				makeStep,
+			)
+		}
+		return
+	}
+
+	pipeline.AddModule(model.NewCreateDirIfNotExistsStep(filepath.Dir(targetPath), filepath.Base(targetPath)))
+	pipeline.AddModule(makeStep(sourcePath, targetPath))
 }
