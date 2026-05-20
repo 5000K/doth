@@ -63,55 +63,55 @@ var installCmd = &cobra.Command{
 		if cmd.Flags().Changed("apt") {
 			sources = append(sources, model.PackageSource{
 				Name:    "apt",
-				Command: "sudo apt install --yes {package}",
+				Command: "sudo apt install --yes '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("apt-get") {
 			sources = append(sources, model.PackageSource{
 				Name:    "apt-get",
-				Command: "sudo apt-get install --yes {package}",
+				Command: "sudo apt-get install --yes '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("dnf") {
 			sources = append(sources, model.PackageSource{
 				Name:    "dnf",
-				Command: "sudo dnf install --assumeyes {package}",
+				Command: "sudo dnf install --assumeyes '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("pacman") {
 			sources = append(sources, model.PackageSource{
 				Name:    "pacman",
-				Command: "sudo pacman -S --noconfirm {package}",
+				Command: "sudo pacman -S --noconfirm '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("yay") {
 			sources = append(sources, model.PackageSource{
 				Name:    "yay",
-				Command: "yay -S --noconfirm {package}",
+				Command: "yay -S --noconfirm '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("paru") {
 			sources = append(sources, model.PackageSource{
 				Name:    "paru",
-				Command: "paru -S --noconfirm {package}",
+				Command: "paru -S --noconfirm '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("go") {
 			sources = append(sources, model.PackageSource{
 				Name:    "go",
-				Command: "go install {package}",
+				Command: "go install '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("npm") {
 			sources = append(sources, model.PackageSource{
 				Name:    "npm",
-				Command: "npm install -g {package}",
+				Command: "npm install -g '{package}'",
 			})
 		}
 		if cmd.Flags().Changed("brew") {
 			sources = append(sources, model.PackageSource{
 				Name:    "brew",
-				Command: "yes | brew install {package}",
+				Command: "yes | brew install '{package}'",
 			})
 		}
 
@@ -189,7 +189,7 @@ func planInstall(sources []model.PackageSource, silent bool) *model.Pipeline {
 	}
 
 	pipeline := model.NewPipeline().
-		AddModule(model.NewConfirmStep("doth install gives this doth project shell execution rights. Use -d to preview the commands that would run.\nProceed?"))
+		AddModule(model.NewConfirmStep("\"doth install\" could be unsafe to run in some projects. Use -d to preview the commands that would run.\nProceed?"))
 
 	deps := collectDependencies()
 
@@ -208,6 +208,9 @@ func planInstall(sources []model.PackageSource, silent bool) *model.Pipeline {
 			if !silent {
 				pipeline.AddModule(model.NewLogStep(fmt.Sprintf("\nInstall dependency %s using source %s ", dep.Name, source.Name), false))
 			}
+
+			packageName = strings.TrimSpace(packageName)
+			packageName = strings.Trim(packageName, "\"'") // remove any surrounding quotes
 
 			command := strings.ReplaceAll(source.Command, "{package}", packageName)
 			pipeline.AddModule(model.NewExecuteShellCommandStep(command, silent))
