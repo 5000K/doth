@@ -1,4 +1,4 @@
-# doth
+# ![doth](./badge.png)
 
 [![CI](https://github.com/5000K/doth/actions/workflows/ci.yml/badge.svg)](https://github.com/5000K/doth/actions/workflows/ci.yml)
 
