@@ -39,6 +39,12 @@ This will create a doth.yaml file with the provided configuration, and a modules
 			return
 		}
 
+		wrapper, err := cmd.Flags().GetBool("wrapper")
+		if err != nil {
+			fmt.Printf("Error getting wrapper flag: %v\n", err)
+			return
+		}
+
 		modulesDir, err := cmd.Flags().GetString("modules")
 		if err != nil {
 			fmt.Printf("Error getting modules flag: %v\n", err)
@@ -60,8 +66,11 @@ This will create a doth.yaml file with the provided configuration, and a modules
 			AddModule(model.NewCreateDirStep(modulesDir, "modules directory")).
 			AddModule(model.NewCreateDirStep(model.LocalStateDir, "local state directory")).
 			AddModule(model.NewCreateFileStep(model.DothFileLocation, []byte(model.DothFileTemplate), "default configuration file")).
-			AddModule(model.NewCreateFileStep(model.GitignoreFileLocation, []byte(model.GitignoreFileTemplate), "default .gitignore file")).
-			AddModule(model.NewCreateFileStepWithPermissions(model.DothShWrapperLocation, []byte(model.DothShWrapper), "doth.sh wrapper script", 0744))
+			AddModule(model.NewCreateFileStep(model.GitignoreFileLocation, []byte(model.GitignoreFileTemplate), "default .gitignore file"))
+
+		if wrapper {
+			pipeline.AddModule(model.NewCreateFileStepWithPermissions(model.DothShWrapperLocation, []byte(model.DothShWrapper), "doth.sh wrapper script", 0744))
+		}
 
 		err = pipeline.Run(dry, verbose, config)
 
@@ -81,4 +90,5 @@ func init() {
 	initCmd.Flags().BoolP("verbose", "v", false, "Print verbose output when running commands")
 	initCmd.Flags().Bool("destructive", false, "Deletes and recreates the whole project. This should be used with caution")
 	initCmd.Flags().BoolP("autoconfirm", "y", false, "Automatically confirm all prompts with 'yes'")
+	initCmd.Flags().BoolP("wrapper", "w", false, "Output a .sh wrapper script for doth (automatically sets up and updates everything)")
 }
