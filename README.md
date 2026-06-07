@@ -20,34 +20,21 @@ Show the battery state in the top bar on your laptop specifically? Deploy with d
 
 ## Modules
 
-Modules are subfolders in your doth project that contain a module.y\[a]ml file.
-The module.yml describes what the module should do.
+A module is a subfolder with a `module.yaml` and the files it deploys. Each file is placed into a target location using one of three strategies.
 
-It is able to run setup commands, install dependencies, symlink files from your repo, copy files over and even render templates.
+- **copy** writes a copy of the file.
+- **link** creates a symbolic link to the file in the repository.
+- **render** runs the file as a Go template and writes the result.
 
-The module.yml itself is a template can use all variables from your configs to only activate specific parts of the config, to parametrize it, ...
+See the [modules guide](https://doth.5000K.org/modules) for the full reference.
 
 ## Templates
 
-doth uses the golang [text/template](https://pkg.go.dev/text/template) system.
-
-Basic examples will be added here later.
+The render strategy uses the Go [text/template](https://pkg.go.dev/text/template) system. The values come from configuration files passed to `doth deploy`. See the [modules guide](https://doth.5000K.org/modules) for examples.
 
 ## Dependencies
 
-You may define dependencies to install in your doth.y[a]ml and module.y[a]ml's. Using the `doth install` command, you can install them.
-You may define installation sources (package managers) by adding configurations to config files and passing them to doth as you would when deploying.
-You may also use the the following flags to include these built-in source configurations - these assume that the command is inside the PATH variable:
-
-- `--apt`
-- `--apt-get`
-- `--dnf`
-- `--pacman`
-- `--yay`
-- `--paru`
-- `--go`
-- `--npm`
-- `--brew`
+Dependencies are declared in `doth.yaml` and `module.yaml`. `doth install` reads the declarations and installs the packages. Built-in flags cover common package managers such as `apt`, `dnf`, and `pacman`. Custom sources can be defined in configuration files. See the [dependencies guide](https://doth.5000K.org/dependencies) for the full reference.
 
 ## Generative AI in doth
 
