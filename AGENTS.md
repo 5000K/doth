@@ -26,4 +26,8 @@ This is explicitly allowed. You are required to read all source code that is rel
 
 Only use the actual code as the source of truth.
 
-Don't ever use existing documentation as a source of truth, as it may be outdated.
+Be careful to follow the documentation style. Use short sentences, be exact and technical. Your audience has general technical knowledge, but no knowledge about this project specifically.  
+Rather than using dashes, semicolons or multiple commas in a sentence, try to split that sentence into multiple sentences instead. Add short examples for more complex issues.
+
+
+Do not use existing documentation as a source of truth when writing more documentation. Ignore it if it isn't relevant to your writing. If it is relevant to your writing, assume it is wrong until proven correct.

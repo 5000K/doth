@@ -1,14 +1,16 @@
-# ![doth](./badge.png)
+<p align="center">
+  <img src="./badge.png" alt="doth" width="360">
+</p>
 
-[![CI](https://github.com/5000K/doth/actions/workflows/ci.yml/badge.svg)](https://github.com/5000K/doth/actions/workflows/ci.yml)
+---
+
+<br/>
+
+[![CI](https://github.com/5000K/doth/actions/workflows/ci.yml/badge.svg)](https://github.com/5000K/doth/actions/workflows/ci.yml) [![Release](https://github.com/5000K/doth/actions/workflows/release.yml/badge.svg)](https://github.com/5000K/doth/actions/workflows/release.yml)
 
 **doth** is a go-based .config manager for linux.
 
-> **DOTH IS IN DEVELOPMENT. WE AT 5000K ALREADY USE IT, BUT WE DON'T RECOMMEND YOU DO THE SAME AT THIS POINT OF TIME.**
-
-```
-go install github.com/5000K/doth
-```
+> doth is a pre-release version. we actively use it at 5000K and it proved stable. Since two of us actively based their arch setup on doth, we are very careful not to introduce breaking changes at this point in time. But it still is pre-release software and should be treated like it.
 
 ## The idea
 
