@@ -41,6 +41,8 @@ chmod +x doth-init.sh
 
 The script puts the Go toolchain and the `doth` binary inside the project's `.doth/` directory. Both are out of the way of your files. The `doth` binary is on the `PATH` only for the duration of the script.
 
+The init script also generates a [doth wrapper](./wrapper.md).
+
 ## The wrapper script
 
 The wrapper script installs and updates `doth` on demand. It keeps the Go toolchain and the `doth` binary inside the project's `.doth/` directory. It is a portable way to run `doth` without installing it system wide.
@@ -73,7 +75,7 @@ Run `doth` through the wrapper from the project root.
 ./doth.sh deploy
 ```
 
-See [[The Wrapper Script]] for the value the wrapper adds to the workflow.
+See [The Wrapper Script](./wrapper.md) for the value the wrapper adds to the workflow.
 
 ## Locking the version
 

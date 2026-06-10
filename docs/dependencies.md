@@ -22,7 +22,7 @@ deps:
       brew: curl
 ```
 
-The name is used to deduplicate dependencies across the project. When the same name appears in multiple modules, the last declaration wins. See [[YML Reference]] for the full dependency format.
+The name is used to deduplicate dependencies across the project. When the same name appears in multiple modules, the last declaration wins. See [YML Reference](./yml.md) for the full dependency format.
 
 ## Built-in sources
 

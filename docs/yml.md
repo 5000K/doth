@@ -6,7 +6,7 @@ author: 5000K
 
 # YML Reference
 
-This page documents the YAML formats used by doth. It is a reference. See [[Setup]], [[Modules]], and [[Dependencies]] for usage guides.
+This page documents the YAML formats used by doth. It is a reference. See [Setup](./setup.md), [Modules](./modules.md), and [Dependencies](./dependencies.md) for usage guides.
 
 ## `doth.yaml`
 
@@ -15,7 +15,7 @@ The top level configuration of a project. Located at the project root as `doth.y
 | Field                          | Type   | Description                                                                                          |
 |--------------------------------|--------|------------------------------------------------------------------------------------------------------|
 | `modulePath`                   | string | Path to the directory that contains modules. Relative to the project root. Defaults to `./modules`. |
-| `deps`                         | list   | Top level dependencies. See [[Dependencies]] for the format.                                         |
+| `deps`                         | list   | Top level dependencies. See [Dependencies](./dependencies.md) for the format.                        |
 | `requireConfig`                | bool   | When `true`, `doth deploy` should refuse to run without configuration files. Currently not enforced. |
 | `dothVersionDoNotEditManually` | int    | The format version of the file. Do not edit by hand. Currently not checked.                          |
 

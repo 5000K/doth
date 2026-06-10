@@ -24,17 +24,19 @@ Three placement strategies are available. The strategy is chosen per file.
 
 The template engine is the Go standard library `text/template`. The values come from one or more configuration files. The user passes those files to `doth deploy`. This lets one repository serve many machines.
 
-doth can also install the packages your configuration depends on. See [[Dependencies]] for details.
+doth can also install the packages your configuration depends on. See [Dependencies](./dependencies.md) for details.
 
 ## Who it is for
 
-doth is for people who want to manage their dotfiles with a real tool. It is for people who run more than one machine. It is for people who want different configurations on different machines. It is for people who want to switch themes or layouts by passing a different configuration file.
+doth is for people who want to manage their dotfiles flexibly. It is for people who run more than one machine. It is for people who want different flavours of the same configuration files ready to deploy - on different machines, or on a single one. It is for people who want to switch themes or layouts by passing a different configuration file.
 
-doth is not for people with a handful of dotfiles on a single machine. A plain git repository with symlinks is enough for that.
+doth is not for people with a handful of static dotfiles on a single machine. A plain git repository with symlinks is enough for that.
 
 ## The shape of a project
 
 A doth project is a directory. It contains a `doth.yaml` and a `modules` directory. The `doth.yaml` holds top level settings and top level dependencies. Each subfolder of `modules/` is a module. The module folder contains a `module.yaml` and the files the module deploys.
+
+`doth.yaml` and the module files are the definition files of a doth project. They define how to deploy what.
 
 ```
 my-dotfiles/
@@ -48,7 +50,7 @@ my-dotfiles/
 │       └── init.lua
 ```
 
-Configuration files are kept outside the repository. They hold the values that vary between machines. They are passed to `doth deploy` with the `--config` flag.
+Configuration files are kept seperately to the definition files. They hold the values that vary between unique configurations. They are passed to `doth deploy` with the `--config` flag.
 
 ```
 my-dotfiles/
@@ -59,8 +61,8 @@ my-dotfiles/
 
 ## Where to go next
 
-- [[Setup]] covers installing `doth` and creating a new project.
-- [[The Wrapper Script]] explains the self contained workflow for deploying a project on a new machine.
-- [[Modules]] covers writing modules.
-- [[Dependencies]] covers the package install system.
-- [[YML Reference]] covers the full format of the YAML files.
+- [Setup](./setup.md) covers installing `doth` and creating a new project.
+- [The Wrapper Script](./wrapper.md) explains the self contained workflow for deploying a project on a new machine.
+- [Modules](./modules.md) covers writing modules.
+- [Dependencies](./dependencies.md) covers the package install system.
+- [YML Reference](./yml.md) covers the full format of the YAML files.

@@ -7,7 +7,15 @@ import (
 )
 
 func RenderTemplate(templateStr string, data any) (string, error) {
-	tmpl, err := template.New("template").Parse(templateStr)
+	tmpl, err := template.New("").Funcs(template.FuncMap{
+		"default": func(def, val any) any {
+			if val == nil {
+				return def
+			}
+			return val
+		},
+	}).Parse(templateStr)
+
 	if err != nil {
 		return "", fmt.Errorf("parsing template: %w", err)
 	}

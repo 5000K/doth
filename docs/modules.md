@@ -6,7 +6,7 @@ author: 5000K
 
 # Modules
 
-A module is a folder inside the `modules` directory of your project. The folder contains a `module.yaml` and the files the module deploys. The `module.yaml` describes where the files go and how. The `modules` directory is configurable through the top level `modulePath` field of `doth.yaml`.
+A module is a folder inside the `modules` directory of your project. The folder contains a `module.yaml` and the files and folders the module deploys. The `module.yaml` describes where the files go and how. The `modules` directory is configurable through the top level `modulePath` field of `doth.yaml`.
 
 ## The shape of a module
 
@@ -19,7 +19,7 @@ modules/
     └── .bashrc
 ```
 
-The folder name is the module name. It must be a valid directory name. Empty names, `.` and `..`, and names containing path separators are rejected.
+The folder name is the module name. It must be a valid directory name. Empty names, `.` and `..`, and names containing path separators are rejected. You may use `~` for paths relative to the current users home directory.
 
 ## Adding a module
 
@@ -34,7 +34,7 @@ The `--name` flag is the module's folder name. The folder appears under `moduleP
 The flags are listed below.
 
 | Flag              | Description                                                                 |
-|-------------------|-----------------------------------------------------------------------------|
+| ----------------- | --------------------------------------------------------------------------- |
 | `--name`          | Internal name of the module. Required.                                      |
 | `--target`        | Source path of the files to import. Required.                               |
 | `--glob`          | Glob pattern of files to include. Relative to the target path.              |
@@ -45,6 +45,8 @@ The flags are listed below.
 | `--autoconfirm`   | Answer all prompts with yes.                                                |
 
 The `--target` path is also written to the module's `target` field. Files in the module are deployed into that path. Edit the field when you want the module's deploy target to differ from its import source.
+
+### Manual module creation
 
 You can also create a module by hand. Make the folder, drop your files in, and write a `module.yaml`.
 
@@ -63,22 +65,22 @@ files:
 
 ## The module file
 
-A `module.yaml` has four fields. They are all optional.
+A `module.yaml` has four fields.
 
-| Field    | Type    | Description                                                                                  |
-|----------|---------|----------------------------------------------------------------------------------------------|
-| `target` | string  | Base path the module's files are deployed into. Each file lands at `target/<file name>`.     |
-| `skip`   | bool    | When `true`, the module is ignored by `doth deploy`.                                         |
-| `files`  | list    | The file entries to deploy. See below.                                                       |
-| `deps`   | list    | Dependencies required by the module. See [[Dependencies]] for the format.                     |
+| Field    | Type   | Description                                                                                |
+| -------- | ------ | ------------------------------------------------------------------------------------------ |
+| `target` | string | Base path the module's files are deployed into. Each file lands at `target/<file name>`.   |
+| `skip`   | bool   | When `true`, the module is ignored by `doth deploy`.                                       |
+| `files`  | list   | The file entries to deploy. See below.                                                     |
+| `deps`   | list   | Dependencies required by the module. See [Dependencies](./dependencies.md) for the format. |
 
 A file entry under `files` has three fields.
 
-| Field      | Type   | Description                                                                                  |
-|------------|--------|----------------------------------------------------------------------------------------------|
-| `name`     | string | The file name or relative path inside the module folder. May contain glob patterns.           |
-| `strategy` | string | Required. One of `copy`, `link`, or `render`.                                                |
-| `target`   | string | Override for the deployment path. The file lands at this path instead of `module.target/<file>`. |
+| Field      | Type   | Description                                                                                                     |
+| ---------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| `name`     | string | The file name or relative path inside the module folder. May contain glob patterns.                             |
+| `strategy` | string | Required. One of `copy`, `link`, or `render`.                                                                   |
+| `target`   | string | Optional override for the deployment path. The file lands at this exact path instead of `module.target/<file>`. |
 
 ## File strategies
 
@@ -99,23 +101,28 @@ Templates use Go's `text/template` syntax. Map values are accessed through the `
 ```jsonc
 // modules/waybar/config.jsonc
 {
+    // ...
     "battery": {{ index . "show-battery" | default false }},
-    "theme":   "{{ index . "theme" | default "light" }}"
+    "theme":   "{{ index . "theme" | default "light" }}" // could also be simplified to {{ .theme | default "light" }}, since the key 'theme' does not contain a dash -
 }
+```
+
+### Configuration
+
+The configuration file is a YAML or JSON object. Its top level keys become the template's data context.
+
+For the waybar example above, imagine this configuration file:
+
+```yaml
+# laptop.yaml
+show-battery: true
+theme: dark
 ```
 
 Pass a configuration file to `doth deploy`.
 
 ```sh
 doth deploy --config laptop.yaml
-```
-
-The configuration file is a YAML or JSON object. Its top level keys become the template's data context.
-
-```yaml
-# laptop.yaml
-show-battery: true
-theme: dark
 ```
 
 See [the Go template documentation](https://pkg.go.dev/text/template) for the full template syntax.
