@@ -14,17 +14,16 @@
 
 ## The idea
 
-**doth** can simply copy or symlink your files from your git repo. Or it can render them as templates.
-
-Show the battery state in the top bar on your laptop specifically? Deploy with different themes by simply passing another one into doth? Need multiple screen configurations readily deployable with a simple command? **doth** is the tool for you.
+Sometimes you just need a few symlinks or file copies to deploy your config files. But for some files you might need more flexible templating.  
+Show the battery state in the status bar on your laptop specifically? Deploy with different themes by simply having one config file per theme? Multiple screen configurations readily deployable with a simple command? **doth** is the tool for you.
 
 ## Modules
 
 A module is a subfolder with a `module.yaml` and the files it deploys. Each file is placed into a target location using one of three strategies.
 
 - **copy** writes a copy of the file.
-- **link** creates a symbolic link to the file in the repository.
-- **render** runs the file as a Go template and writes the result.
+- **link** creates a symbolic link to the file.
+- **render** renders the file as a template and writes the result.
 
 See the [modules guide](https://doth.5000K.org/modules) for the full reference.
 
