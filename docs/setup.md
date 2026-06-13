@@ -4,8 +4,6 @@ description: Installing the doth binary and initializing a new project.
 author: 5000K
 ---
 
-# Setup
-
 A new doth project needs the `doth` binary and a project directory. Each release of doth publishes two ways to get a working installation. The pre-built binaries cover the common platforms. The init script handles the full bootstrap on any supported system.
 
 ## Pre-built binaries
