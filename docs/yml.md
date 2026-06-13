@@ -4,8 +4,6 @@ description: The full format reference for doth.yaml, module.yaml, and configura
 author: 5000K
 ---
 
-# YML Reference
-
 This page documents the YAML formats used by doth. It is a reference. See [Setup](./setup.md), [Modules](./modules.md), and [Dependencies](./dependencies.md) for usage guides.
 
 ## `doth.yaml`
