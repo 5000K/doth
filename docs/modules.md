@@ -4,8 +4,6 @@ description: Writing modules, choosing file strategies, and using templates.
 author: 5000K
 ---
 
-# Modules
-
 A module is a folder inside the `modules` directory of your project. The folder contains a `module.yaml` and the files and folders the module deploys. The `module.yaml` describes where the files go and how. The `modules` directory is configurable through the top level `modulePath` field of `doth.yaml`.
 
 ## The shape of a module
