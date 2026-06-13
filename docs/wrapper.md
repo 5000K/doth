@@ -4,8 +4,6 @@ description: A self-contained way to run doth without installing Go or doth glob
 author: 5000K
 ---
 
-# The Wrapper Script
-
 The wrapper is a small shell script that ships with a doth project. It manages the project's own `doth` installation. The `doth` binary and it's dependencies live inside the project's `.doth/` directory. Nothing is installed system wide.
 
 ## What it solves
