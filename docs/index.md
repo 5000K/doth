@@ -4,8 +4,6 @@ description: An introduction to doth, what it solves, and who it is for.
 author: 5000K
 ---
 
-# Overview
-
 doth is a tool that manages configuration files on Linux. It treats your dotfiles as a modular repository. The repository is version controlled. The same repository can be deployed onto many machines with different settings.
 
 ## The problem
