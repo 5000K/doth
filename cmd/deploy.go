@@ -62,7 +62,7 @@ If a module has dependencies, they will be installed first using the appropriate
 
 		_ = len(configs)
 
-		planDeploy(configs).Run(
+		planDeploy(configs, configPaths).Run(
 			dry, verbose, model.CreatePipelineConfig(
 				true, autoconfirm,
 			),
@@ -106,7 +106,16 @@ func readModules() []model.Module {
 	return modules
 }
 
-func planDeploy(configs model.ConfigMap) *model.Pipeline {
+func planDeploy(configs model.ConfigMap, configPaths []string) *model.Pipeline {
+	doth, err := model.LoadDothFileFromCwd()
+	if err != nil {
+		panic("failed to load doth file: " + err.Error())
+	}
+
+	if (len(configPaths) == 0) && doth.RequireConfig {
+		panic("no config provided, but required to deploy this doth project")
+	}
+
 	pipeline := model.NewPipeline()
 	modules := readModules()
 

@@ -1,0 +1,26 @@
+skip: false
+target: ./target/example
+files:
+  - name: copy.yml
+    strategy: copy
+  - name: link.yml
+    strategy: link
+  - name: render.yml
+    strategy: render
+  - name: copy-folder # copy an entire folder
+    strategy: copy
+  - name: link-folder # link an entire folder
+    strategy: link
+  - name: render-folder # render an entire folder
+    strategy: render
+deps:
+  - name: curl
+    packages:
+      pacman: curl
+      apt: curl
+      brew: curl
+  - name: wget
+    packages:
+      pacman: wget
+      apt: wget
+      brew: wget

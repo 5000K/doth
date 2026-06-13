@@ -1,0 +1,2 @@
+This file will be rendered, because the folder it is in is rendered.
+Here is a rendered output: {{ .value }}
