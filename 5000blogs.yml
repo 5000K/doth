@@ -1,0 +1,36 @@
+# config for doth.5000K.org
+address: ":8080"
+
+paths:
+  template: "https://raw.githubusercontent.com/5000K/5000blogs/refs/heads/main/template/template.docs.html"
+  theme: "https://raw.githubusercontent.com/5000K/5000blogs/refs/heads/main/template/theme.docs.css"
+  icon: "https://raw.githubusercontent.com/5000K/doth/refs/heads/main/icon.png"
+
+
+log_level: 'info'
+page_size: 25
+
+blog_name: 'doth'
+
+nav_links:
+  - name: 'Pages'
+    url: '/posts'
+
+site_url: 'https://doth.5000K.org'
+feed_description: 'doth - Content'
+feed_size: 20  # number of posts to include in RSS and Atom feeds
+rss_content: 'none'  # 'none' (default), 'text' (plain text), or 'html' (rendered HTML)
+
+og_image:
+  enabled: true
+  bg_color: '#111111'
+  text_color: '#f0f0f0'
+  sub_color: '#999999'
+  accent_color: '#7eb8f7'
+
+rescan_cron: "0 0,12 * * *"
+
+sources:
+  - type: git
+    url: "https://github.com/5000K/doth"
+    dir: docs

@@ -64,7 +64,7 @@ if ! command -v doth &> /dev/null; then
 fi
 
 # initialize a fresh doth project
-doth init --modules ./modules --verbose
+doth init --modules ./modules --verbose --wrapper
 
 echo "doth is initialized and ready to use!"
 echo "instead of installing doth globally, use ./doth.sh to run the current version of doth."
