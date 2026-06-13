@@ -4,8 +4,6 @@ description: Declaring dependencies and installing them with built-in or custom 
 author: 5000K
 ---
 
-# Dependencies
-
 doth can install the packages your configuration depends on. Dependencies are declared in the `doth.yaml` and in each `module.yaml`. `doth install` reads the declarations and runs the install commands.
 
 ## Declaring dependencies
